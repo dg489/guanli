@@ -1,13 +1,13 @@
 <template>
 	<div class="seeting_drug">
 		<el-table :data="tableData.slice((currentPage-1)*pagesize,pagesize*currentPage)" style="width: 100%" height='400' highlight-current-row  border>
-			<el-table-column prop="dnumber" label="柜号" width="180">
+			<el-table-column prop="cnumber" label="柜号" width="180">
 			</el-table-column>
-			<el-table-column prop="names" label="柜名称" width="180">
+			<el-table-column prop="name" label="柜名称" width="180">
 			</el-table-column>
-			<el-table-column prop="location_dd" label="位置" >
+			<el-table-column prop="opsition" label="位置" >
 			</el-table-column>
-			<el-table-column prop="location_ip" label="IP"width='240'>
+			<el-table-column prop="ip" label="IP"width='240'>
 			</el-table-column>
 			<el-table-column fixed="right" label="操作" width="100">
 				<template slot-scope="scope">
@@ -22,8 +22,14 @@
 </template>
 
 <script>
+	import Uurl from '@/common/js/getapi'
 	import seeting from './Seetingdrug'
 	export default {
+		props: {
+			drug_All: {
+				type: Array
+			}
+		},
 		data() {
 			return {
 				tableData: [],
@@ -35,23 +41,18 @@
 			}
 		},
 		created() {
+			this.getData()
 			this.$axios({
 				methods: 'get',
-				url: 'https://www.easy-mock.com/mock/5acadfcb6c11675e15295842/example/',
+				url: Uurl.PostUurl.queryallDrugInfo,
 				response: 'json'
 			}).then(res => {
-				this.drugall = res.data.data.data
-			}).catch()				
-			this.$axios({
-				method: 'get',
-				url: 'https://www.easy-mock.com/mock/5acadfcb6c11675e15295842/example/drugadmin' ,
-				responseType:'json'
-			}).then(rep => {
-			this.tableData =	rep.data.data.data
-			this.totalset = this.tableData.length
-			console.log(this.drug_All)
-			}).catch(rep => {
-			})
+				this.drugall = JSON.parse(res.data.data)
+				console.log(this.drugall)
+			}).catch()
+		},
+		mounted() {
+			this.getData()
 		},
 		methods: {
 			SeetingClick(i) {
@@ -60,6 +61,10 @@
 			},
 			currentset_change(i) {
 				this.currentPage = i
+			},
+			getData() {
+			this.tableData = this.drug_All
+			this.totalset = this.tableData.length					
 			}
 		},
 		components: {

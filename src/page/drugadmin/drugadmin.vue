@@ -4,7 +4,7 @@
 			<el-tab-pane label="药品列表">
 				<div class="admin_serch">
 					<span style="line-height: 40px">查询条件：</span>
-					<el-select v-model="search_selet" filterable placeholder="请选择" class="el-select-cd">
+					<el-select v-model="search_select" filterable placeholder="请选择" class="el-select-cd">
 						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
 						</el-option>
 					</el-select>
@@ -52,7 +52,7 @@
 			<el-tab-pane label="药品配置">
 				<div class="admin_serch">
 					<span style="line-height: 40px">查询条件：</span>
-					<el-select v-model="search_selet" filterable placeholder="请选择" class="el-select-cd">
+					<el-select v-model="search_select" filterable placeholder="请选择" class="el-select-cd">
 						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
 						</el-option>
 					</el-select>
@@ -61,7 +61,7 @@
 						</el-input>
 					</div>
 					<div class="pull">
-						<el-button type="primary" icon="el-icon-search" @click='Searcheven' round>搜索</el-button>
+						<el-button type="primary" icon="el-icon-search" @click='Searchcabinet' round>搜索</el-button>
 					</div>
 				</div>
 				<drugseeting :drug_All='drug_all'></drugseeting>
@@ -81,7 +81,7 @@
 				totalmin: 0, //默认数据总数
 				pagesize: 10, //每一页的数据
 				currentPage: 1, //默认开始页
-				search_selet: '',
+				search_select: 0,
 				search_input: '',
 				getrowkey(row) {
 					return row.id
@@ -100,8 +100,8 @@
 					}
 				],
 				tableData: [],
-				deleatdrug: [],
-				drugamend_index: {},
+				deleatdrug: [], //删除操作
+				drugamend_index: {},//编辑分页
 				drug_all: []
 			}
 },
@@ -128,7 +128,7 @@
 					url: Uurl.PostUurl.Searchurl,
 					data: {
 						search_input: this.search_input,
-						search_selet: this.search_selet
+						search_selet: this.search_select
 						}
 				}).then(rep => {
 					if(rep.status === 200) {
@@ -138,6 +138,24 @@
 					}
 				})
 			},
+			Searchcabinet() { //药柜搜索
+				this.$axios({
+					method: "post",
+					url: Uurl.PostUurl.cabinet,
+					data: {
+						search_input: this.search_input,
+						search_selet: this.search_select
+						}
+				}).then(rep => {
+					if(rep.status === 200) {
+						this.drug_all = JSON.parse(rep.data.data)
+						console.log(this.drug_all)
+					}
+				}).catch(rep =>{
+					console.log
+				})
+			}
+			,
 			dialog() { //新增页
 				this.bus.$emit('dialogshow', true)
 			},
@@ -165,7 +183,7 @@
 							},
 						}).then(rep => {
 							if(rep.status === 200) {
-								this.restaurts = rep.data.data
+						this.tableData = this.tableData.filter(ele => this.deleatdrug.indexOf(ele.id) == -1)				
 								this.$message({
 									type: 'success',
 									message: '删除成功!'

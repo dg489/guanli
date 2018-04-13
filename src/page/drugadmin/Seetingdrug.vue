@@ -12,11 +12,11 @@
 			</div>
 			<p>柜号:</p>
 			<p class="medicine_seet">
-				{{drugseet.dnumber}}
+				{{drugseet.cnumber}}
 			</p>
 			<p>药品名称:</p>
 			<p class="medicine_seet">
-				{{drugseet.names}}
+				{{drugseet.name}}
 			</p>
 			<p>位置:</p>
 			<p class="medicine_seet">
@@ -24,19 +24,19 @@
 			</p>
 			</el-card>
 			<el-card class="box-card" style='margin-top: 20px;'>
-				<el-table :data="tableData" style="width: 100%" height='400' highlight-current-row border>
+				<el-table ref="listTable" :data="tableData" style="width: 100%" height='300' highlight-current-row border>
 					<el-table-column prop="dnumber" label="药品编号" width="180">
 					</el-table-column>
 					<el-table-column prop="names" label="药品名称">
 					</el-table-column>
 					<el-table-column fixed="right" label="最大配药数量" width="150">
 						<template slot-scope="scope">
-							<el-input placeholder="最大配药数量"  v-model='scope.row.input' clearable>
+							<el-input placeholder="最大配药数量" v-model='scope.row.inputs'  clearable>
 							</el-input>
 						</template>						
 					</el-table-column>
 				</el-table>
-				<div style="display: flex;">
+				<div style="display: flex; margin-top: 15px;">
 					<div style="flex: 1;">
 						<el-button type="success" @click='post_seetdrug'  round>完成配药</el-button>
 					</div>
@@ -99,7 +99,8 @@
 				tablist: [], //选中的药品列表
 				getrowkey(row) {
 					return row.id
-				}
+				},
+				inputs: ''
 			}
 		},
 		methods: {
@@ -131,11 +132,9 @@
 		     	this.$confirm('确认完成？')
 		          .then(_ => {
 		          	this.tableData = this.tablist
-				console.log( this.tableData[1].input)
-		          	
 		          	this.innerVisible = false
 		          })
-		          .catch(_ => {})		     	
+		          .catch(_ => {})
 		     },
 		     current_change(currentPage) { //修改页码
 				this.currentPage = currentPage
@@ -151,26 +150,52 @@
 		     _doneseeting() {//药品配置页关闭
 		     	this.$confirm('确认关闭？')
 		          .then(_ => {
+		          	this.tableData = []
+		         	 this.$refs.multipleTable.clearSelection()
 		          	this.dialogVisible = false
 		          })
-		          .catch	(_ => {})
+		          .catch(_ => {
+		          	
+		          })
 		     },
 			SelectionChange(val) {//选中添加
 				this.tablist = val
 			},
 		 	post_seetdrug() {
+		 		let val = []
+		 		let list = {}
+		 		let post_list = {}
+		 		for(let o in this.tableData) {
+		 			list = {
+		 				d_id: this.drugseet.id,
+		 				c_id: this.tableData[o].id,
+		 				max_count: this.tableData[o].inputs
+		 			}
+		 			val.push(list)
+					post_list  = val
+		 		}
 				this.$axios({
 					method: "post",
-					url: Uurl.PostUurl.Searchurl,
-					data: {
-						search_input: this.search_input,
-						search_selet: this.search_selet
-						}
+					url: Uurl.PostUurl.seetcabinet,
+					data: post_list = {
+						post_list
+					}
 				}).then(rep => {
 					if(rep.status === 200) {
-
+					for(let v in this.tableData) {
+		 				this.tableData[v].inputs = ''
 					}
-				}).catch()		 		
+				this.$message({
+					        type: 'success',
+					        message: '成功!'
+				})					
+					}
+				}).catch(
+				this.$message({
+					        type: 'warning',
+					        message: '后台服务器故障，请检查!'
+				})					
+				)
 		 	}
 		},
 		mounted() { //配置页出现

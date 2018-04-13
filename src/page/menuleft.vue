@@ -41,7 +41,9 @@
 						</template>
 
 						<el-menu-item-group>
-							<el-menu-item index="3-1">用户管理</el-menu-item>
+							<router-link to="/drugcontrol/user/" style="color:#fff">
+								<el-menu-item index="3-1">用户管理</el-menu-item>
+							</router-link>							
 						</el-menu-item-group>
 						<el-menu-item-group>
 							<el-menu-item index="3-2">权限管理</el-menu-item>
@@ -50,7 +52,9 @@
 							<el-menu-item index="3-3">指纹管理</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-							<el-menu-item index="3-4">药柜管理</el-menu-item>
+							<router-link to="/drugcontrol/cabinetadmin/" style="color:#fff">
+								<el-menu-item index="3-4">药柜管理</el-menu-item>
+							</router-link>							
 						</el-menu-item-group>
 						<el-menu-item-group>
 						<router-link to="/drugcontrol/drugadmin/" style="color:#fff">
@@ -92,16 +96,6 @@
 	        		dataobj: this.drugpulldata
 	        	}
 	        })      			
-      		},
-      		Alldrugpull() {
-      		this.$router.push(
-	        	{path:'/drugcontrol/drugadmin/',
-	        	 name:'drugadmin',
-	        	 params:{
-	        		name: 'drugadmin',
-	        		attri: ATTRI
-	        	}
-	        })
       		}
    	},
 		data() {
