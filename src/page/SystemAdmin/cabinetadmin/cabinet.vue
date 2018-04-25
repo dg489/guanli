@@ -1,5 +1,5 @@
 <template>
-	<div class="user_control">
+	<div class="cabinetdmin">
 				<div class="admin_serch">
 					<span style="line-height: 40px">查询条件：</span>
 					<el-select v-model="search_selet" filterable placeholder="请选择" class="el-select-cd">
@@ -7,7 +7,7 @@
 						</el-option>
 					</el-select>
 					<div class=" pull">
-						<el-input placeholder="请输入内容" v-model="search_input" clearable>
+						<el-input placeholder="请输入内容" v-model="search_input" :disabled='buttondiss' clearable>
 						</el-input>
 					</div>
 					<div class="pull">
@@ -19,9 +19,6 @@
 					<div class="pull">
 						<el-button type="danger" round icon="el-icon-delete" @click='deleat_all'>删除</el-button>
 					</div>
-					<div class="pull">
-						<el-button type="warning" round icon="el-icon-sort-down" @click='deleat_all'>权限下发</el-button>
-					</div>					
 				</div>
 				<el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" 
 					:row-key='getrowkey' style="width: 100%" height='500' 
@@ -31,21 +28,13 @@
 					border>
 					<el-table-column type="selection" width="55" prop='id' :reserve-selection = true>
 					</el-table-column>
-					<el-table-column prop="cnumber" label="工号" width="100">
+					<el-table-column prop="cnumber" label="柜号" width="180">
 					</el-table-column>
-					<el-table-column prop="name" label="姓名" width="100">
+					<el-table-column prop="name" label="柜名称" width="180">
 					</el-table-column>
-					<el-table-column prop="opsition" label="登录账号" width='100'>
+					<el-table-column prop="opsition" label="位置" width='180'>
 					</el-table-column>
-					<el-table-column prop="opsition" label="登录密码" width='100'>
-					</el-table-column>
-					<el-table-column prop="opsition" label="联系电话" width='100'>
-					</el-table-column>
-					<el-table-column prop="opsition" label="指纹是否采集" width='120'>
-					</el-table-column>					
-					<el-table-column prop="opsition" label="权限是否下发" width='120'>
-					</el-table-column>					
-					<el-table-column prop="opsition" label="备注">
+					<el-table-column prop="ip" label="IP">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100">
 						<template slot-scope="scope">
@@ -55,11 +44,15 @@
 				</el-table>
 				<el-pagination @current-change='current_change' background layout="prev, pager, next" :total="totalmin">
 				</el-pagination>
+				<addcabinet></addcabinet>
+				<cabinetamend :cabamend='cabamend_index'></cabinetamend>
 	</div>
 </template>
 
 <script>
 	import Uurl from '@/common/js/getapi'
+	import addcabinet from './addcabinet'
+	import cabinetamend from './cabinetxiugai'
 	export default {
 	data() {
 		return {
@@ -77,11 +70,11 @@
 				},
 				{
 					value: 1,
-					label: '工号'
+					label: '柜号号'
 				},
 				{
 					value: 2,
-					label: '姓名'
+					label: '名称'
 				}
 			],
 			tableData: [],
@@ -102,6 +95,8 @@
 		}).catch()
 	},
 	components: {
+		cabinetamend,
+		addcabinet
 	},
 	methods: {
 		Searcheven() { //搜索
@@ -176,8 +171,18 @@
 			this.cabamend_index = i
 			this.bus.$emit('cabinet_amendevn', true)
 		}
-	}
-}</script>
+	},
+		computed: {
+			buttondiss() {
+				if(this.search_selet === 0) {
+					return true
+				} else {
+					return false
+				}
+			}
+		}	
+}
+</script>
 
 <style lang="stylus" scoped="scoped">
 	.admin_serch

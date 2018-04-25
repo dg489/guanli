@@ -3,7 +3,7 @@
 		<el-table :data="tableData.slice((currentPage-1)*pagesize,pagesize*currentPage)" style="width: 100%" height='400' highlight-current-row  border>
 			<el-table-column prop="cnumber" label="柜号" width="180">
 			</el-table-column>
-			<el-table-column prop="name" label="柜名称" width="180">
+			<el-table-column prop="c_name" label="柜名称" width="180">
 			</el-table-column>
 			<el-table-column prop="opsition" label="位置" >
 			</el-table-column>
@@ -48,11 +48,7 @@
 				response: 'json'
 			}).then(res => {
 				this.drugall = JSON.parse(res.data.data)
-				console.log(this.drugall)
 			}).catch()
-		},
-		mounted() {
-			this.getData()
 		},
 		methods: {
 			SeetingClick(i) {
@@ -69,6 +65,11 @@
 		},
 		components: {
 			seeting
+		},
+		watch: {
+			drug_All(news ,old) {
+				this.tableData  = news
+			}
 		}
 	}
 </script>

@@ -7,13 +7,13 @@
 		  		</div>
 		    	<el-form :model="loginForm" :rules="rules" ref="loginForm">
 					<el-form-item prop="username">
-						<el-input v-model="loginForm.username" placeholder="用户名"><span>dsfsf</span></el-input>
+						<el-input v-model="loginForm.username" placeholder="用户名"></el-input>
 					</el-form-item>
 					<el-form-item prop="password">
 						<el-input type="password" placeholder="密码" v-model="loginForm.password"></el-input>
 					</el-form-item>
 					<el-form-item>
-				    	<el-button type="primary" @click="submitForm('loginForm')" class="submit_btn" :disabled="buttondis">登陆</el-button>
+				    	<el-button type="primary"  @keyup.enter= "submitForm('loginForm')" @click.enter="submitForm('loginForm')" class="submit_btn" :disabled="buttondis">登陆</el-button>
 				  	</el-form-item>
 				</el-form>
 	  		</section>
@@ -48,25 +48,26 @@ import axios from 'axios'
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-//						axios({
-//							method: "post",
-//							url: '/Drug_shelf/user/login',
-//							data: {
-//								user_name: this.loginForm.username, user_password: this.loginForm.password
-//							},
-//						}).then(rep => {
-//							if(rep.data.success) {
-//								alert('成功')
-//							}
-//						})
-						this.$router.push('/drugControl')
-						} else {
-							this.$notify.error({
+						axios({
+							method: "post",
+							url: '/Drug_shelf/user/login',
+							data: {
+								user_name: this.loginForm.username, user_password: this.loginForm.password
+							},
+						}).then(rep => {
+							console.log(rep)
+							if(rep.data.success) {
+								this.$router.push('/drugControl')
+							} else {
+								this.$notify.error({
 								title:'错误',
-								message: '请输入正确的用户名密码',
+								message: rep.data.msg,
 								offset: 500
-							})
-							return false
+							})								
+							}
+						}).catch(rep =>{
+
+						})
 						}
 					}
 				)
@@ -97,6 +98,8 @@ import axios from 'axios'
 		border-radius: 5px
 		text-align: center
 		background: #fff
+		.el-form-item
+			margin-bottom: 20px
 		.submit_btn
 			width: 100%
 			font-size: 16px

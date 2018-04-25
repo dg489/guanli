@@ -1,6 +1,6 @@
 <template>
 			<div class="menu-count">
-				<el-menu default-active="1" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+				<el-menu :default-active="$route.path" :router=true background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
 					<el-submenu index="1">
 						<template slot="title">
 							<i class="el-icon-location"></i>
@@ -10,13 +10,13 @@
 							<el-menu-item index="1-1" @click="drugfor" > 药品库存</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-							<el-menu-item index="1-2" @click="drugfor">药品申请</el-menu-item>
+							<el-menu-item index="/drugcontrol/drugask">药品申请</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-							<el-menu-item index="1-3" @click='drugpull'>药品领药</el-menu-item>
+							<el-menu-item index='/drugcontrol/drugpull'>药品领药</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-							<el-menu-item index="1-4" @click="drugpull">药品加药</el-menu-item>
+							<el-menu-item index='/drugcontrol/drugadd'>药品加药</el-menu-item>
 						</el-menu-item-group>
 					</el-submenu>
 					<el-submenu index="2">
@@ -25,13 +25,13 @@
 							<span>查询管理</span>
 						</template>
 						<el-menu-item-group>
-							<el-menu-item index="2-1">查询监控</el-menu-item>
+							<el-menu-item index="/drugcontrol/query/">查询监控</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-							<el-menu-item index="2-2">操作查询</el-menu-item>
+							<el-menu-item index="/drugcontrol/operationquery/">操作查询</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-							<el-menu-item index="2-3">违规查询</el-menu-item>
+							<el-menu-item index="/drugcontrol/Rule/">违规查询</el-menu-item>
 						</el-menu-item-group>
 					</el-submenu>
 					<el-submenu index="3">
@@ -41,29 +41,26 @@
 						</template>
 
 						<el-menu-item-group>
-							<router-link to="/drugcontrol/user/" style="color:#fff">
-								<el-menu-item index="3-1">用户管理</el-menu-item>
-							</router-link>							
+							<el-menu-item index="/drugcontrol/user/">用户管理</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-							<el-menu-item index="3-2">权限管理</el-menu-item>
+							<el-menu-item index="/drugcontrol/prowerconfig/">权限管理</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
 							<el-menu-item index="3-3">指纹管理</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-							<router-link to="/drugcontrol/cabinetadmin/" style="color:#fff">
-								<el-menu-item index="3-4">药柜管理</el-menu-item>
-							</router-link>							
+							<el-menu-item index="/drugcontrol/cabinetadmin/">药柜管理</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-						<router-link to="/drugcontrol/drugadmin/" style="color:#fff">
-							<el-menu-item index="3-5">药品管理</el-menu-item>
-						</router-link>
+							<el-menu-item index="/drugcontrol/drugadmin/">药品管理</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group>
-							<el-menu-item index="3-6">系统参数</el-menu-item>
+							<el-menu-item index="/drugcontrol/SystemControl/">系统参数</el-menu-item>
 						</el-menu-item-group>
+						<el-menu-item-group>
+							<el-menu-item index="/drugcontrol/Srole/">角色管理</el-menu-item>
+						</el-menu-item-group>						
 					</el-submenu>
 				</el-menu>
 			</div>
@@ -139,4 +136,6 @@
 	background-color: #545c64
 	.el-menu
 		border: none
+		.clor
+			color: #fff
 </style>

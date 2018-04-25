@@ -136,8 +136,4 @@
 </script>
 
 <style lang="stylus">
-.medicine_admin
-	margin-top: 20px
-	.medicine_input
-		margin: 5px 0
 </style>

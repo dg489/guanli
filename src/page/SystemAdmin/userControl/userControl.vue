@@ -1,5 +1,5 @@
 <template>
-	<div class="cabinetdmin">
+	<div class="user_control">
 				<div class="admin_serch">
 					<span style="line-height: 40px">查询条件：</span>
 					<el-select v-model="search_selet" filterable placeholder="请选择" class="el-select-cd">
@@ -14,7 +14,7 @@
 						<el-button type="primary" round icon="el-icon-search" @click='Searcheven'>搜索</el-button>
 					</div>
 					<div class="pull">
-						<el-button type="success" round icon="el-icon-circle-plus" @click='dialog'>新增</el-button>
+						<el-button type="success" round icon="el-icon-circle-plus" @click='dialog_user'>新增</el-button>
 					</div>
 					<div class="pull">
 						<el-button type="danger" round icon="el-icon-delete" @click='deleat_all'>删除</el-button>
@@ -28,35 +28,44 @@
 					border>
 					<el-table-column type="selection" width="55" prop='id' :reserve-selection = true>
 					</el-table-column>
-					<el-table-column prop="cnumber" label="柜号" width="180">
+					<el-table-column prop="cnumber" label="工号" >
 					</el-table-column>
-					<el-table-column prop="name" label="柜名称" width="180">
+					<el-table-column prop="name" label="姓名" >
 					</el-table-column>
-					<el-table-column prop="opsition" label="位置" width='180'>
+					<el-table-column prop="opsition" label="登录账号" >
 					</el-table-column>
-					<el-table-column prop="ip" label="IP">
+					<el-table-column prop="opsition" label="登录密码" >
 					</el-table-column>
-					<el-table-column fixed="right" label="操作" width="100">
+					<el-table-column prop="opsition" label="联系电话" >
+					</el-table-column>
+					<el-table-column prop="opsition" label="指纹是否采集" width='120'>
+					</el-table-column>					
+					<el-table-column prop="opsition" label="权限是否下发" width='120'>
+					</el-table-column>					
+					<el-table-column prop="opsition" label="备注" width='120'>
+					</el-table-column>
+					<el-table-column fixed="right" label="操作" >
 						<template slot-scope="scope">
 							<el-button icon="el-icon-edit" @click="amendClick(scope.row)" type="primary" size="small">编辑</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-pagination @current-change='current_change' background layout="prev, pager, next" :total="totalmin">
+				<el-pagination @current-change='current_change' background layout="prev, pager, next" :total="totalmax">
 				</el-pagination>
-				<addcabinet></addcabinet>
-				<cabinetamend :cabamend='cabamend_index'></cabinetamend>
+				<userxg></userxg>
+				<adduser></adduser>
 	</div>
 </template>
 
 <script>
 	import Uurl from '@/common/js/getapi'
-	import addcabinet from './addcabinet'
-	import cabinetamend from './cabinetxiugai'
+	import userxg from './userxiugai'
+	import adduser from './addUser'
+	
 	export default {
 	data() {
 		return {
-			totalmin: 0, //默认数据总数
+			totalmax: 0, //默认数据总数
 			pagesize: 10, //每一页的数据
 			currentPage: 1, //默认开始页
 			search_selet: 0,
@@ -70,11 +79,11 @@
 				},
 				{
 					value: 1,
-					label: '柜号号'
+					label: '工号'
 				},
 				{
 					value: 2,
-					label: '名称'
+					label: '姓名'
 				}
 			],
 			tableData: [],
@@ -90,13 +99,13 @@
 			responseType: 'json'
 		}).then(res => {
 			this.tableData = res.data.data.data
-			this.totalmin = this.tableData.length
+			this.totalmax = this.tableData.length
 
 		}).catch()
 	},
 	components: {
-		cabinetamend,
-		addcabinet
+		userxg,
+		adduser
 	},
 	methods: {
 		Searcheven() { //搜索
@@ -115,14 +124,13 @@
 				}
 			})
 		},
-		dialog() { //新增页
-			this.bus.$emit('addcabinetshow', true)
+		dialog_user() { //新增页
+			this.bus.$emit('addUser_show', true)
 		},
 		deleat_all() { //批量删除
 			if(this.deleatdrug.length === 0) {
-				console.log()
 				this.$message({
-					message: '请选择要删除的药柜',
+					message: '请选择要删除的员工',
 					type: 'warning'
 				})
 			} else {
@@ -131,7 +139,6 @@
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
-
 					this.$axios({
 						method: "post",
 						url: Uurl.PostUurl,
@@ -140,7 +147,8 @@
 						},
 					}).then(rep => {
 						if(rep.status === 200) {
-						this.tableData = this.tableData.filter(ele => this.deleatdrug.indexOf(ele.id) == -1)				
+							this.tableData = this.tableData.filter(ele => this.deleatdrug.indexOf(ele.id) == -1)				
+							this.totalmax = this.tableData.length							
 							this.$message({
 								type: 'success',
 								message: '删除成功!'
@@ -162,14 +170,13 @@
 			this.deleatdrug = val.map(ele => {
 				return ele.id
 			})
-			console.log(this.deleatdrug)
 		},
 		current_change(currentPage) { //分页改变时触发，传当前页数
 			this.currentPage = currentPage
 		},
 		amendClick(i) { //编辑当前页
 			this.cabamend_index = i
-			this.bus.$emit('cabinet_amendevn', true)
+			this.bus.$emit('User_amendevn', true)
 		}
 	}
 }</script>

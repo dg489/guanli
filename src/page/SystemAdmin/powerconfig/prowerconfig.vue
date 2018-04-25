@@ -1,7 +1,7 @@
 <template>
-	<div class="drugadmin">
+	<div class="prowerconfig">
 		<el-tabs>
-			<el-tab-pane label="药品列表">
+			<el-tab-pane label="权限列表">
 				<div class="admin_serch">
 					<span style="line-height: 40px">查询条件：</span>
 					<el-select v-model="search_select" filterable placeholder="请选择" class="el-select-cd">
@@ -16,7 +16,7 @@
 						<el-button type="primary" round icon="el-icon-search" @click='Searcheven'>搜索</el-button>
 					</div>
 					<div class="pull">
-						<el-button type="success" round icon="el-icon-circle-plus" @click='dialog'>新增</el-button>
+						<el-button type="success" round icon="el-icon-circle-plus" @click='dialog_prower'>新增</el-button>
 					</div>
 					<div class="pull">
 						<el-button type="danger" round icon="el-icon-delete" @click='deleat_all'>删除</el-button>
@@ -30,13 +30,11 @@
 					border>
 					<el-table-column type="selection" width="55" prop='id' :reserve-selection = true>
 					</el-table-column>
-					<el-table-column prop="dnumber" label="药品编号" width="180">
+					<el-table-column prop="dnumber" label="权限号" width="180">
 					</el-table-column>
-					<el-table-column prop="names" label="药品名称" width="180">
+					<el-table-column prop="names" label="权限描述" width="180">
 					</el-table-column>
-					<el-table-column prop="attribute" label="属性" width='180'>
-					</el-table-column>
-					<el-table-column prop="efficacy" label="描述">
+					<el-table-column prop="attribute" label="备注" >
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100">
 						<template slot-scope="scope">
@@ -46,10 +44,10 @@
 				</el-table>
 				<el-pagination @current-change='current_change' background layout="prev, pager, next" :total="totalmin">
 				</el-pagination>
-				<medicineAdmin></medicineAdmin>
-				<drugxiugai :drugAmend='drugamend_index'></drugxiugai>
+				<addprower></addprower>
+				<xiugaiprower></xiugaiprower>
 			</el-tab-pane>
-			<el-tab-pane label="药品配置">
+			<el-tab-pane label="权限配置">
 				<div class="admin_serch">
 					<span style="line-height: 40px">查询条件：</span>
 					<el-select v-model="search_select" filterable placeholder="请选择" class="el-select-cd">
@@ -63,18 +61,21 @@
 					<div class="pull">
 						<el-button type="primary" icon="el-icon-search" @click='Searchcabinet' round>搜索</el-button>
 					</div>
+					<div class="pull">
+						<el-button type="success" round icon="el-icon-circle-plus" @click='dialog_seetprower'>新增</el-button>
+					</div>					
 				</div>
-				<drugseeting :drug_All='drug_all'></drugseeting>
+					<seetprower></seetprower>	
 			</el-tab-pane>
 		</el-tabs>
 	</div>
 </template>
 
 <script>
-	import medicineAdmin from './medicineadmin'
-	import drugseeting from './drugseeting'
-	import drugxiugai from './drugxiugai'
 	import Uurl from '@/common/js/getapi'
+	import addprower from './addPrower'
+	import xiugaiprower from './Prowerxiugai'
+	import seetprower from './seetPrower'
 	export default {
 		data() {
 			return {
@@ -92,7 +93,7 @@
 					},
 					{
 						value: 1,
-						label: '编号'
+						label: '权限号'
 					},
 					{
 						value: 2,
@@ -117,9 +118,9 @@
 			}).catch()
 		},
 		components: {
-			drugxiugai,
-			drugseeting,
-			medicineAdmin
+			addprower,
+			xiugaiprower,
+			seetprower
 		},
 		methods: {
 			Searcheven() { //搜索
@@ -156,11 +157,11 @@
 				})
 			}
 			,
-			dialog() { //新增页
-				this.bus.$emit('dialogshow', true)
+			dialog_prower() { //新增页
+				this.bus.$emit('prower_show', true)
 			},
-			drug_amend() { //修改页
-
+			dialog_seetprower() {
+				this.bus.$emit('seet_prower', true)
 			},
 			deleat_all() { //批量删除
 				var _this = this
@@ -210,7 +211,7 @@
 			},
 			amendClick(i) { //编辑当前页
 				this.drugamend_index = i
-				this.bus.$emit('drug_amendevn', true)
+				this.bus.$emit('prower_amendevn', true)
 			}
 		}
 	}

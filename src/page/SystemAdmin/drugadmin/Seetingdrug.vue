@@ -109,10 +109,6 @@
 																					
 			},
 			handleClose(done) {
-//				this.$message({
-//					        type: 'success',
-//					        message: '修改成功!'
-//				})
 		       this.$confirm('确认关闭？')
 		         .then(_ => {
 		          done();
@@ -122,7 +118,6 @@
 		    outClose(done) {
 		    	 this.$confirm('确认关闭？')
 		         .then(_ => {
-		         	this.tableData = []
 		         	 this.$refs.multipleTable.clearSelection()
 		          done();
 		         })
@@ -150,7 +145,6 @@
 		     _doneseeting() {//药品配置页关闭
 		     	this.$confirm('确认关闭？')
 		          .then(_ => {
-		          	this.tableData = []
 		         	 this.$refs.multipleTable.clearSelection()
 		          	this.dialogVisible = false
 		          })
@@ -167,8 +161,8 @@
 		 		let post_list = {}
 		 		for(let o in this.tableData) {
 		 			list = {
-		 				d_id: this.drugseet.id,
-		 				c_id: this.tableData[o].id,
+		 				c_id: this.drugseet.id,
+		 				d_id: this.tableData[o].id,
 		 				max_count: this.tableData[o].inputs
 		 			}
 		 			val.push(list)
@@ -181,6 +175,7 @@
 						post_list
 					}
 				}).then(rep => {
+					console.log(rep)
 					if(rep.status === 200) {
 					for(let v in this.tableData) {
 		 				this.tableData[v].inputs = ''
@@ -189,26 +184,30 @@
 					        type: 'success',
 					        message: '成功!'
 				})					
+				this.dialogVisible = false
 					}
-				}).catch(
+				}).catch( rep => {
 				this.$message({
 					        type: 'warning',
 					        message: '后台服务器故障，请检查!'
 				})					
+				}
 				)
+		 	},
+		 	getlist() {
+				this.tableAllData = this.drugall_list
+				this.totalall = this.tableAllData.length
 		 	}
 		},
 		mounted() { //配置页出现
 			this.bus.$on('drug_seet', (id) => {
 				this.dialogVisible = id
 			})
-				this.tableAllData = this.drugall_list
-				this.totalall = this.tableAllData.length
-
+			this.getlist()
 		},
 		watch: {
-			drugall_list(curval,oldval) {
-				this.tableAllData = curval
+			drugall_list(news, olds) {
+				this.tableAllData = news
 			}
 		}
 }
